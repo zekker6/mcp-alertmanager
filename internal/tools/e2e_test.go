@@ -43,7 +43,7 @@ func newFakeAlertmanager(t *testing.T) *httptest.Server {
 
 	mux.HandleFunc("/api/v2/alerts", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]map[string]any{
+		_ = json.NewEncoder(w).Encode([]map[string]any{
 			{
 				"labels":      map[string]string{"alertname": "TestAlert", "severity": "critical"},
 				"annotations": map[string]string{"summary": "Test alert"},
@@ -55,13 +55,13 @@ func newFakeAlertmanager(t *testing.T) *httptest.Server {
 	mux.HandleFunc("/api/v2/silences", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
 			var body map[string]any
-			json.NewDecoder(r.Body).Decode(&body)
+			_ = json.NewDecoder(r.Body).Decode(&body)
 			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(map[string]string{"silenceID": "test-silence-id"})
+			_ = json.NewEncoder(w).Encode(map[string]string{"silenceID": "test-silence-id"})
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]map[string]any{
+		_ = json.NewEncoder(w).Encode([]map[string]any{
 			{
 				"id":     "silence-1",
 				"status": map[string]string{"state": "active"},
@@ -79,7 +79,7 @@ func newFakeAlertmanager(t *testing.T) *httptest.Server {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]any{
+		_ = json.NewEncoder(w).Encode(map[string]any{
 			"id":     id,
 			"status": map[string]string{"state": "active"},
 		})

@@ -57,7 +57,7 @@ func TestGetAlerts(t *testing.T) {
 			t.Errorf("unexpected method: %s", r.Method)
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]map[string]any{
+		_ = json.NewEncoder(w).Encode([]map[string]any{
 			{"labels": map[string]string{"alertname": "TestAlert"}},
 		})
 	}))
@@ -87,7 +87,7 @@ func TestGetAlertsWithFilters(t *testing.T) {
 			t.Errorf("expected filter=[severity=critical], got %v", filters)
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]map[string]any{})
+		_ = json.NewEncoder(w).Encode([]map[string]any{})
 	}))
 	defer srv.Close()
 
@@ -110,7 +110,7 @@ func TestGetAlertsBasicAuth(t *testing.T) {
 			t.Errorf("expected basic auth admin:secret, got %s:%s (ok=%v)", user, pass, ok)
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]map[string]any{})
+		_ = json.NewEncoder(w).Encode([]map[string]any{})
 	}))
 	defer srv.Close()
 
@@ -127,7 +127,7 @@ func TestGetAlertsCustomHeaders(t *testing.T) {
 			t.Errorf("expected X-Scope-OrgID=tenant1, got %q", r.Header.Get("X-Scope-OrgID"))
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]map[string]any{})
+		_ = json.NewEncoder(w).Encode([]map[string]any{})
 	}))
 	defer srv.Close()
 
@@ -144,7 +144,7 @@ func TestGetSilences(t *testing.T) {
 			t.Errorf("unexpected path: %s", r.URL.Path)
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]map[string]any{
+		_ = json.NewEncoder(w).Encode([]map[string]any{
 			{"id": "silence-1", "status": map[string]string{"state": "active"}},
 			{"id": "silence-2", "status": map[string]string{"state": "expired"}},
 		})
@@ -167,7 +167,7 @@ func TestGetSilence(t *testing.T) {
 			t.Errorf("unexpected path: %s", r.URL.Path)
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]any{"id": "abc-123"})
+		_ = json.NewEncoder(w).Encode(map[string]any{"id": "abc-123"})
 	}))
 	defer srv.Close()
 
@@ -193,9 +193,9 @@ func TestCreateSilence(t *testing.T) {
 			t.Errorf("expected Content-Type application/json, got %q", r.Header.Get("Content-Type"))
 		}
 		var body map[string]any
-		json.NewDecoder(r.Body).Decode(&body)
+		_ = json.NewDecoder(r.Body).Decode(&body)
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]string{"silenceID": "new-silence-id"})
+		_ = json.NewEncoder(w).Encode(map[string]string{"silenceID": "new-silence-id"})
 	}))
 	defer srv.Close()
 
@@ -237,7 +237,7 @@ func TestDeleteSilence(t *testing.T) {
 func TestHTTPErrorHandling(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("silence not found"))
+		_, _ = w.Write([]byte("silence not found"))
 	}))
 	defer srv.Close()
 
