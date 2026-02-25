@@ -1,0 +1,55 @@
+version: '3'
+
+vars:
+  GIT_COMMIT: "dev"
+  BUILD_DATE:
+    sh: date --iso-8601=seconds
+
+tasks:
+  default:
+    cmds:
+      - task --list-all
+
+  lint:
+    deps:
+      - vet
+      - fmt
+      - golangci
+
+  vet:
+    cmds:
+      - go vet ./...
+
+  fmt:
+    cmds:
+      - gofmt -l -w -s ./
+
+  golangci:
+    cmds:
+      - golangci-lint run
+
+  test:
+    cmds:
+      - go test -short ./...
+
+  test:e2e:
+    desc: Run end-to-end tests (builds binary first)
+    deps:
+      - build
+    cmds:
+      - go test -v -run TestE2E ./internal/tools/...
+
+  test:all:
+    desc: Run all tests (unit + e2e)
+    deps:
+      - build
+    cmds:
+      - go test ./...
+
+  build:
+    cmds:
+      - go build -ldflags "-X main.version={{.GIT_COMMIT}} -X main.date={{.BUILD_DATE}}" -o tmp/mcp-alertmanager ./cmd/mcp-alertmanager
+
+  mcp:inspector:
+    cmds:
+      - mcp-inspector --config inspector-config.json --server mcp-alertmanager

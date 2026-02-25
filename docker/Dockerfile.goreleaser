@@ -1,0 +1,8 @@
+FROM alpine:3.23.3
+
+ARG TARGETPLATFORM
+COPY $TARGETPLATFORM/mcp-alertmanager /mcp-alertmanager
+
+EXPOSE      8012
+ENTRYPOINT  [ "/mcp-alertmanager" ]
+CMD         [ "-httpListenAddr=:8012", "-mode=sse" ]
