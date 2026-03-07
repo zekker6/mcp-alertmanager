@@ -239,3 +239,12 @@ func (c *AlertmanagerClient) DeleteSilence(id string) error {
 	_, err := c.doRequest(http.MethodDelete, "/api/v2/silence/"+id, nil)
 	return err
 }
+
+// HealthCheck verifies that the Alertmanager API is reachable by querying its status endpoint.
+func (c *AlertmanagerClient) HealthCheck() error {
+	_, err := c.doRequest(http.MethodGet, "/api/v2/status", nil)
+	if err != nil {
+		return fmt.Errorf("alertmanager health check failed: %w", err)
+	}
+	return nil
+}

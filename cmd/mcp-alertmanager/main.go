@@ -87,6 +87,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	if err := amClient.HealthCheck(); err != nil {
+		logger.Error("Alertmanager is not reachable", zap.String("url", *alertmanagerURL), zap.Error(err))
+		os.Exit(1)
+	}
+	logger.Info("Alertmanager health check passed", zap.String("url", *alertmanagerURL))
+
 	s := server.NewMCPServer(
 		"Alertmanager MCP Server",
 		fmt.Sprintf("v%s (commit: %s, date: %s)", version, commit, date),
