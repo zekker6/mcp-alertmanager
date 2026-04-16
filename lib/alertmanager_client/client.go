@@ -61,7 +61,9 @@ func NewClient(baseURL string, opts ...ClientOption) (*AlertmanagerClient, error
 		opt(options)
 	}
 
-	transport := &http.Transport{}
+	transport := &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+	}
 
 	if options.caFile != "" || options.insecure {
 		tlsConfig := &tls.Config{
