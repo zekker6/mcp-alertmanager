@@ -72,6 +72,14 @@ func newFakeAlertmanager(t *testing.T) *httptest.Server {
 		})
 	})
 
+	mux.HandleFunc("/api/v2/status", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(map[string]any{
+			"cluster": map[string]any{"status": "ready"},
+			"config":  map[string]any{"original": ""},
+		})
+	})
+
 	mux.HandleFunc("/api/v2/silence/", func(w http.ResponseWriter, r *http.Request) {
 		id := strings.TrimPrefix(r.URL.Path, "/api/v2/silence/")
 		if r.Method == http.MethodDelete {
