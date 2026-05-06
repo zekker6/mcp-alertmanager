@@ -4,7 +4,7 @@ go 1.25.5
 
 require (
 	github.com/mark3labs/mcp-go v0.50.0
-	go.uber.org/zap v1.27.1
+	go.uber.org/zap v1.28.0
 )
 
 require (
