@@ -3,7 +3,7 @@ module github.com/zekker6/mcp-alertmanager
 go 1.25.5
 
 require (
-	github.com/mark3labs/mcp-go v0.51.0
+	github.com/mark3labs/mcp-go v0.52.0
 	go.uber.org/zap v1.28.0
 )
 
